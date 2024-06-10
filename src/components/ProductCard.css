@@ -1,0 +1,26 @@
+/* src/components/ProductCard.css */
+.product-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 16px;
+    text-align: center;
+    margin: 16px;
+  }
+  
+  .product-card img {
+    max-width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 8px;
+  }
+  
+  .product-card h3 {
+    font-size: 1.2em;
+    margin: 0 0 8px 0;
+  }
+  
+  .product-card p {
+    font-size: 1em;
+    color: #333;
+  }
+  

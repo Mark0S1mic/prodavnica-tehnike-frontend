@@ -1,0 +1,12 @@
+.navbar {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: auto;
+    display: inline-block;
+}
+
+.btn-outline-success {
+    margin-left: 5px;
+}

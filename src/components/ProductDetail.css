@@ -1,0 +1,22 @@
+/* src/components/ProductDetail.css */
+.product-detail {
+    padding: 20px;
+  }
+  
+  .product-detail img {
+    max-width: 300px;
+    height: auto;
+    display: block;
+    margin-bottom: 20px;
+  }
+  
+  .product-detail h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  .product-detail p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  
