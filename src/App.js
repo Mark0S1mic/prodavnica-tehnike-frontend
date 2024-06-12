@@ -1,6 +1,5 @@
-// src/App.js
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import AdminPanel from './pages/AdminPanel';
 import Login from './components/Login';
@@ -11,45 +10,122 @@ import './App.css';
 import ProductDisplay from './components/ProductDisplay';
 import ProductDetail from './components/ProductDetail';
 import SearchResults from './components/SearchResults';
-import UserProfile from './components/UserProfile';
-import axios from 'axios';
+import Cart from './components/Cart';
+//import { loadStripe } from '@stripe/stripe-js';
+import PaymentComponent from './components/PaymentComponent'
 
 function App() {
   const [user, setUser] = useState(null);
+  const [cart, setCart] = useState([]);
 
-  useEffect(() => {
-    const token = localStorage.getItem('jwtToken');
-    if (token) {
-      axios.get('/api/current_user', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(response => setUser(response.data))
-      .catch(error => console.error('Error fetching current user:', error));
-    }
-  }, []);
+  const handleLogin = (userData) => {
+    console.log('Korisnik prijavljen:', userData);
+    setUser(userData);
+  };
+  
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem('cart');
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('jwtToken');
     setUser(null);
+    clearCart();
   };
+
+  const addToCart = (product, quantity = 1) => {
+    setCart((prevCart) => {
+      const existingItemIndex = prevCart.findIndex((item) => item.productId === product);
+      if (existingItemIndex >= 0) {
+        const updatedCart = [...prevCart];
+        updatedCart[existingItemIndex].quantity += quantity;
+        saveCartToLocalStorage(updatedCart);
+        return updatedCart;
+      } else {
+        const newItem = { product: { ...product }, quantity };
+        const newCart = [...prevCart, newItem];
+        saveCartToLocalStorage(newCart);
+        return newCart;
+      }
+    });
+  };
+
+  const saveCartToLocalStorage = (cart) => {
+    try {
+      const cartJSON = JSON.stringify(cart);
+      localStorage.setItem('cart', cartJSON);
+      console.log('Korpa uspešno sačuvana u localStorage.');
+    } catch (error) {
+      console.error('Greška prilikom upisa korpe u localStorage:', error);
+    }
+  };
+
+  const removeFromCart = (productId) => {
+    setCart((prevCart) => {
+      const indexToRemove = prevCart.findIndex(item => item.product.id === productId);
+      if (indexToRemove === -1) {
+        console.error('Proizvod sa datim ID-jem nije pronađen u korpi.');
+        return prevCart;
+      }
+      const updatedCart = [...prevCart];
+      updatedCart.splice(indexToRemove, 1);
+      saveCartToLocalStorage(updatedCart);
+      return updatedCart;
+    });
+  };
+
+  const calculateTotal = () => {
+    return cart.reduce((total, item) => total + item.product.cenaProizvoda * item.quantity, 0);
+  };
+
+  //const stripePromise = loadStripe('pk_test_51PPcXcJDiMSNjr2EV9nwEzVj3HOmREqBd78hDijTLmeLki7PFD6wYLrGOSqs2Woer0V5wyWQC9x1zbvnWWSzEeXT00B2sUPraU');
 
   return (
     <Router>
-      <Navbar user={user} onLogout={handleLogout} />
+      <Navbar user={user} onLogout={handleLogout} cart={cart} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products/:category" element={<ProductDisplay />} />
-        <Route path="/product/:productId" element={<ProductDetail />} />
+        <Route path="/product/:productId" element={<ProductDetail addToCart={addToCart} />} />
         <Route path="/admin" element={<AdminPanel />} />
-        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/login" element={<Login setUser={handleLogin} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/search" element={<SearchResults />} />
-        <Route path="/profile" element={<UserProfile user={user} setUser={setUser} />} />
+        <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} calculateTotal={calculateTotal} user={user} />} />
+        {/* <Route path="/checkout" element={<PaymentComponent cart={cart} user={user} clearCart={clearCart} />} /> */}
+        <Route path="/checkout/:nazivProizvoda/:cenaProizvoda/:userId" element={<PaymentComponent />} />
+        {user ? (
+          <>
+            <Route path="/login" element={<Navigate to="/" />} />
+            <Route path="/register" element={<Navigate to="/" />} />
+          </>
+        ) : (
+          <>
+            <Route path="/profile" element={<Navigate to="/login" />} />
+          </>
+        )}
       </Routes>
     </Router>
   );
 }
+
+//const CheckoutForm = ({ cart, user, clearCart }) => {
+  //const handleSubmit = async (event) => {
+    //event.preventDefault();
+    // Implementacija logike za kreiranje Checkout sesije i procesiranje plaćanja
+    // Poziv backend API-ja za kreiranje Checkout sesije
+    // Redirekcija korisnika na Checkout stranicu Stripe-a
+    // Nakon uspešne transakcije, osvežavanje korpe i redirekcija korisnika
+    // Implementacija ove logike zavisi od vašeg backend-a i konfiguracije Stripe-a
+ // };
+
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       {/* Dodajte polja za unos podataka o kartici i ostale informacije */}
+//       <button type="submit">Plati</button>
+//     </form>
+//   );
+// };
 
 export default App;

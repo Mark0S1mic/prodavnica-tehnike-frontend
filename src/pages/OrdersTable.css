@@ -1,0 +1,39 @@
+.orders-table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .orders-table {
+    border-collapse: collapse;
+    width: 80%;
+    margin: 20px 0;
+  }
+  
+  .orders-table th {
+    background-color: #4CAF50; /* Pozadinska boja za naslove kolona */
+    color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .orders-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .orders-table th, .orders-table td {
+    border: 1px solid #ddd; /* Granice između kolona */
+  }
+  
+  .orders-table tr:nth-child(even) {
+    background-color: #f2f2f2; /* Alternativna boja za redove */
+  }
+  
+  .orders-table tr:hover {
+    background-color: #ddd; /* Boja za hover efekat na redove */
+  }
+  

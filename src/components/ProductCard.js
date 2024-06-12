@@ -4,10 +4,18 @@ import { Link } from 'react-router-dom';
 import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
+  const getProductImage = (proizvodId) => {
+    try {
+      return require(`../assets/images/product${proizvodId}.jpg`);
+    } catch (err) {
+      return 'https://via.placeholder.com/150';
+    }
+  };
+
   return (
     <div className="product-card">
       <Link to={`/product/${product.proizvodId}`}>
-        <img src={product.imageUrl || 'https://via.placeholder.com/150'} alt={product.nazivProizvoda} />
+        <img src={getProductImage(product.proizvodId)} alt={product.nazivProizvoda} />
         <h3>{product.nazivProizvoda}</h3>
         <p>{product.cenaProizvoda} RSD</p>
       </Link>
@@ -17,7 +25,7 @@ const ProductCard = ({ product }) => {
 
 ProductCard.propTypes = {
   product: PropTypes.shape({
-    proizvodId: PropTypes.number,
+    proizvodId: PropTypes.number.isRequired,
     imageUrl: PropTypes.string,
     nazivProizvoda: PropTypes.string.isRequired,
     cenaProizvoda: PropTypes.number.isRequired

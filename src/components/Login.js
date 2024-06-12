@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../App.css'; // Promenite putanju kako bi se pravilno učitao fajl
+import '../App.css';
 
-const Login = () => {
+const Login = ({ setUser }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -14,7 +14,8 @@ const Login = () => {
         try {
             const response = await axios.post('https://localhost:7073/api/Autentifikacija/login', { username, password });
             const { token, role } = response.data;
-            localStorage.setItem('token', token);
+            localStorage.setItem('jwtToken', token);
+            setUser(response.data); // Set user state with response data
             if (role === 'Admin') {
                 navigate('/admin');
             } else {
@@ -56,7 +57,6 @@ const Login = () => {
                                             </div>
                                             <div className="text-center pt-1 mb-5 pb-1">
                                                 <button className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Log in</button>
-                                                {/* <a className="text-muted" href="#!">Forgot password?</a> */}
                                             </div>
                                             <div className="d-flex align-items-center justify-content-center pb-4">
                                                 <p className="mb-0 me-2">Don't have an account?</p>

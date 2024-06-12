@@ -1,22 +1,35 @@
-/* src/components/ProductDetail.css */
+/* ProductDetail.css */
 .product-detail {
-    padding: 20px;
-  }
-  
-  .product-detail img {
-    max-width: 300px;
-    height: auto;
-    display: block;
-    margin-bottom: 20px;
-  }
-  
-  .product-detail h1 {
-    font-size: 2em;
-    margin-bottom: 10px;
-  }
-  
-  .product-detail p {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-  }
-  
+  display: flex;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.product-detail img {
+  flex: 0 0 50%; /* Slika zauzima polovinu širine */
+  max-width: 100%;
+  height: auto;
+  margin-right: 20px;
+}
+
+.product-info {
+  flex-grow: 1;
+  border-left: 1px solid #ccc; /* Linija između slike i podataka */
+  padding-left: 20px; /* Da bi podaci imali malo prostora od linije */
+}
+
+.product-info h2 {
+  margin-top: 0;
+}
+
+.product-info p {
+  margin: 0;
+}
+
+.product-info input[type="number"] {
+  margin-bottom: 10px;
+}
+
+.product-info button {
+  margin-top: 10px;
+}

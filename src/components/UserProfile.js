@@ -1,10 +1,15 @@
-// src/components/UserProfile.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const UserProfile = ({ user, setUser }) => {
     const [editMode, setEditMode] = useState(false);
     const [formData, setFormData] = useState({ ...user });
+
+    useEffect(() => {
+        if (user) {
+            setFormData({ ...user });
+        }
+    }, [user]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -14,7 +19,7 @@ const UserProfile = ({ user, setUser }) => {
     const handleFormSubmit = (e) => {
         e.preventDefault();
         const token = localStorage.getItem('jwtToken');
-        axios.put(`/api/kupac/${user.korisnickoImeKupca}`, formData, {
+        axios.put(`http://localhost:7073/api/kupac/${user.id}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -33,31 +38,74 @@ const UserProfile = ({ user, setUser }) => {
                 <form onSubmit={handleFormSubmit}>
                     <div>
                         <label>Username</label>
-                        <input type="text" name="korisnickoImeKupca" value={formData.korisnickoImeKupca} onChange={handleInputChange} disabled />
+                        <input
+                            type="text"
+                            name="korisnickoImeKupca"
+                            value={formData.korisnickoImeKupca || ''}
+                            onChange={handleInputChange}
+                            disabled
+                            autoComplete="username"
+                        />
                     </div>
                     <div>
                         <label>Password</label>
-                        <input type="password" name="sifraKupca" value={formData.sifraKupca} onChange={handleInputChange} />
+                        <input
+                            type="password"
+                            name="sifraKupca"
+                            value={formData.sifraKupca || ''}
+                            onChange={handleInputChange}
+                            autoComplete="new-password"
+                        />
                     </div>
                     <div>
                         <label>Date of Birth</label>
-                        <input type="date" name="datumRodjenjaKupca" value={formData.datumRodjenjaKupca} onChange={handleInputChange} />
+                        <input
+                            type="date"
+                            name="datumRodjenjaKupca"
+                            value={formData.datumRodjenjaKupca || ''}
+                            onChange={handleInputChange}
+                            autoComplete="bday"
+                        />
                     </div>
                     <div>
                         <label>Address</label>
-                        <input type="text" name="adresaKupca" value={formData.adresaKupca} onChange={handleInputChange} />
+                        <input
+                            type="text"
+                            name="adresaKupca"
+                            value={formData.adresaKupca || ''}
+                            onChange={handleInputChange}
+                            autoComplete="street-address"
+                        />
                     </div>
                     <div>
                         <label>City</label>
-                        <input type="text" name="gradKupca" value={formData.gradKupca} onChange={handleInputChange} />
+                        <input
+                            type="text"
+                            name="gradKupca"
+                            value={formData.gradKupca || ''}
+                            onChange={handleInputChange}
+                            autoComplete="address-level2"
+                        />
                     </div>
                     <div>
                         <label>Contact</label>
-                        <input type="email" name="kontaktKupca" value={formData.kontaktKupca} onChange={handleInputChange} />
+                        <input
+                            type="email"
+                            name="kontaktKupca"
+                            value={formData.kontaktKupca || ''}
+                            onChange={handleInputChange}
+                            autoComplete="email"
+                        />
                     </div>
                     <div>
                         <label>Phone Number</label>
-                        <input type="text" name="brojTelefonaKupca" value={formData.brojTelefonaKupca} onChange={handleInputChange} />
+                        <input
+                            type="text"
+                            name="brojTelefonaKupca"
+                            value={formData.brojTelefonaKupca || ''}
+                            onChange={handleInputChange}
+                            autoComplete="tel"
+                        />
                     </div>
                     <button type="submit">Save</button>
                     <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
@@ -79,3 +127,4 @@ const UserProfile = ({ user, setUser }) => {
 };
 
 export default UserProfile;
+

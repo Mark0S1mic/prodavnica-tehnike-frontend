@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ProductsDropdown from './ProductsDropdown/ProductsDropdown';
 import './Navbar.css';
 
-const Navbar = ({ user, onLogout }) => {
+const Navbar = ({ user, onLogout, cart, updateCart }) => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -15,6 +15,11 @@ const Navbar = ({ user, onLogout }) => {
     const handleSearchSubmit = (e) => {
         e.preventDefault();
         navigate(`/search?q=${searchQuery}`);
+    };
+
+    const handleLogoutClick = () => {
+        onLogout();
+        navigate('/'); // Redirect to home page after logout
     };
 
     return (
@@ -43,13 +48,9 @@ const Navbar = ({ user, onLogout }) => {
                         </li>
                         {user ? (
                             <>
+                                
                                 <li className="nav-item">
-                                    <Link className="nav-link" to="/profile">
-                                        <i className="fas fa-user"></i> Profile
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <button className="nav-link btn" onClick={onLogout}>
+                                    <button className="nav-link btn" onClick={handleLogoutClick}>
                                         Logout
                                     </button>
                                 </li>
@@ -64,6 +65,11 @@ const Navbar = ({ user, onLogout }) => {
                                 </li>
                             </>
                         )}
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/cart">
+                                <i className="fas fa-shopping-cart"></i> Cart ({cart.length})
+                            </Link>
+                        </li>
                     </ul>
                 </div>
             </div>
