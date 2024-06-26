@@ -13,9 +13,10 @@ const Login = ({ setUser }) => {
         e.preventDefault();
         try {
             const response = await axios.post('https://localhost:7073/api/Autentifikacija/login', { username, password });
-            const { token, role } = response.data;
+            const { token, role, korisnickoImeKupca } = response.data; // Dodajte korisnickoImeKupca ako je dostupno u odgovoru
             localStorage.setItem('jwtToken', token);
             setUser(response.data); // Set user state with response data
+            console.log('Korisničko ime kupca:', korisnickoImeKupca); // Dodajte ovaj red za ispis korisničkog imena
             if (role === 'Admin') {
                 navigate('/admin');
             } else {

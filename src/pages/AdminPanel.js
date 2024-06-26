@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './OrdersTable.css'; // Dodajte ovu liniju za CSS stilizaciju
+import './OrdersTable.css';
 
 const OrdersTable = () => {
   const [orders, setOrders] = useState([]);
@@ -13,6 +13,7 @@ const OrdersTable = () => {
             'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
           }
         });
+        console.log('Fetched orders:', response.data); // Check the structure of the data
         setOrders(response.data);
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -28,21 +29,20 @@ const OrdersTable = () => {
       <table className="orders-table">
         <thead>
           <tr>
-            
             <th>Order Date</th>
             <th>Delivery Address</th>
             <th>Payment Date</th>
-            <th>Customer</th>
+            <th>Customer ID</th>
+   
           </tr>
         </thead>
         <tbody>
           {orders.map((order, index) => (
             <tr key={index}>
-             
               <td>{order.datumPorudzbine}</td>
               <td>{order.adresaPorudzbine}</td>
               <td>{order.datumPlacanja}</td>
-              <td>{order.kupacs[0].korisnickoImeKupca}</td> {/* Ovde možete prilagoditi prikaz korisnika */}
+              <td>{order.kupacId}</td> {/* Check if kupac exists */}
             </tr>
           ))}
         </tbody>
