@@ -12,6 +12,8 @@ import ProductDetail from './components/ProductDetail';
 import SearchResults from './components/SearchResults';
 import Cart from './components/Cart';
 import PaymentComponent from './components/PaymentComponent';
+import Success from './components/Success';
+import Cancel from './components/Cancel';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -108,6 +110,8 @@ function App() {
         <Route path="/search" element={<SearchResults />} />
         <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} calculateTotal={calculateTotal} user={user} />} />
         <Route path="/checkout/:nazivProizvoda/:cenaProizvoda/:userId" element={<PaymentComponent />} />
+        <Route path="/success" element={<Success />} />  
+        <Route path="/cancel" element={<Cancel />} /> 
         {user ? (
           <>
             <Route path="/login" element={<Navigate to="/" />} />
