@@ -15,6 +15,7 @@ const Login = ({ setUser }) => {
             const response = await axios.post('https://localhost:7073/api/Autentifikacija/login', { username, password });
             const { token, role, korisnickoImeKupca } = response.data; // Dodajte korisnickoImeKupca ako je dostupno u odgovoru
             localStorage.setItem('jwtToken', token);
+            localStorage.setItem('userRole', role);
             setUser(response.data); // Set user state with response data
             console.log('Korisničko ime kupca:', korisnickoImeKupca); // Dodajte ovaj red za ispis korisničkog imena
             if (role === 'Admin') {
@@ -69,9 +70,7 @@ const Login = ({ setUser }) => {
                                 <div className="col-lg-6 d-flex align-items-center gradient-custom-2">
                                     <div className="text-white px-3 py-4 p-md-5 mx-md-4">
                                         <h4 className="mb-4">We are more than just a company</h4>
-                                        <p className="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                        <p className="small mb-0">Create an account, and begin shopping for all your needs.</p>
                                     </div>
                                 </div>
                             </div>

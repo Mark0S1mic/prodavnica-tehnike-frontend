@@ -22,33 +22,39 @@ const Cart = ({ cart, removeFromCart, calculateTotal, user }) => {
   
   
   const handleCheckout = async () => {
+    // Provera da li je korisnik ulogovan
+    if (!user) {
+      alert('Morate biti ulogovani da biste nastavili sa Checkout-om.');
+      return;
+    }
+  
     const stripe = await loadStripe('pk_test_51PPcXcJDiMSNjr2EV9nwEzVj3HOmREqBd78hDijTLmeLki7PFD6wYLrGOSqs2Woer0V5wyWQC9x1zbvnWWSzEeXT00B2sUPraU');
     const products = cart.map(item => ({
-      amount: item.product.cenaProizvoda, // Pretvaranje cene u valutu
-      name: item.product.nazivProizvoda, // Prilagođavanje naziva proizvoda
+      amount: item.product.cenaProizvoda,
+      name: item.product.nazivProizvoda,
       quantity: item.quantity,
-      proizvodId: item.product.proizvodId // Koristite proizvodId
+      proizvodId: item.product.proizvodId
     }));
-
+  
     const korisnickoImeKupca = user?.korisnickoImeKupca;
-
+  
     if (!korisnickoImeKupca) {
       console.error('korisnickoImeKupca is not defined');
       return;
     }
-
+  
     try {
       const response = await axios.post('https://localhost:7073/api/Payments/Checkout', {
         products: products,
         korisnickoImeKupca: korisnickoImeKupca
       });
-
+  
       const session = response.data;
-
+  
       const result = await stripe.redirectToCheckout({
         sessionId: session.sessionId
       });
-
+  
       if (result.error) {
         console.error(result.error.message);
       }
@@ -86,7 +92,7 @@ const Cart = ({ cart, removeFromCart, calculateTotal, user }) => {
                       </MDBCol>
                       <MDBCol md="3" lg="2" xl="2" className="offset-lg-1">
                         <MDBTypography tag="h5" className="mb-0">
-                          {item.product.cenaProizvoda} USD
+                          {item.product.cenaProizvoda} RSD
                         </MDBTypography>
                       </MDBCol>
                       <MDBCol md="1" lg="1" xl="1" className="text-end">
@@ -102,7 +108,7 @@ const Cart = ({ cart, removeFromCart, calculateTotal, user }) => {
             <MDBCard>
               <MDBCardBody className="p-4">
                 <MDBTypography tag="h5" className="mb-0">
-                  Total: {calculateTotal()} USD
+                  Total: {calculateTotal()} RSD
                 </MDBTypography>
                 <MDBBtn className="mt-3" color="warning" block size="lg" onClick={handleCheckout}>
                   Checkout

@@ -1,0 +1,50 @@
+.center {
+    text-align: center;
+  }
+  
+  .sort-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .sort-button {
+    margin: 0 10px;
+    padding: 8px 16px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+  }
+  
+  .sort-button.active-asc {
+    background-color: lightgreen;
+  }
+  
+  .sort-button.active-desc {
+    background-color: lightcoral;
+  }
+  
+ 
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .pagination li {
+    margin: 0 5px;
+  }
+  
+  .page-link {
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+  }
+  
+  .page-link.active {
+    background-color: lightblue;
+  }
+  

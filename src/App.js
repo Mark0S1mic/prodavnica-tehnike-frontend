@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import AdminPanel from './pages/AdminPanel';
@@ -11,18 +11,33 @@ import ProductDisplay from './components/ProductDisplay';
 import ProductDetail from './components/ProductDetail';
 import SearchResults from './components/SearchResults';
 import Cart from './components/Cart';
-//import { loadStripe } from '@stripe/stripe-js';
-import PaymentComponent from './components/PaymentComponent'
+import PaymentComponent from './components/PaymentComponent';
 
 function App() {
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState([]);
 
+  useEffect(() => {
+    const token = localStorage.getItem('jwtToken');
+    const userData = localStorage.getItem('userData');
+    const storedCart = localStorage.getItem('cart');
+
+    if (token && userData) {
+      setUser(JSON.parse(userData));
+    }
+
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+
   const handleLogin = (userData) => {
     console.log('Korisnik prijavljen:', userData);
+    localStorage.setItem('jwtToken', userData.token); // Assuming userData contains a token property
+    localStorage.setItem('userData', JSON.stringify(userData));
     setUser(userData);
   };
-  
+
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem('cart');
@@ -30,13 +45,14 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('jwtToken');
+    localStorage.removeItem('userData');
     setUser(null);
     clearCart();
   };
 
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
-      const existingItemIndex = prevCart.findIndex((item) => item.productId === product);
+      const existingItemIndex = prevCart.findIndex((item) => item.product.id === product.id);
       if (existingItemIndex >= 0) {
         const updatedCart = [...prevCart];
         updatedCart[existingItemIndex].quantity += quantity;
@@ -79,8 +95,6 @@ function App() {
     return cart.reduce((total, item) => total + item.product.cenaProizvoda * item.quantity, 0);
   };
 
-  //const stripePromise = loadStripe('pk_test_51PPcXcJDiMSNjr2EV9nwEzVj3HOmREqBd78hDijTLmeLki7PFD6wYLrGOSqs2Woer0V5wyWQC9x1zbvnWWSzEeXT00B2sUPraU');
-
   return (
     <Router>
       <Navbar user={user} onLogout={handleLogout} cart={cart} />
@@ -93,7 +107,6 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} calculateTotal={calculateTotal} user={user} />} />
-        {/* <Route path="/checkout" element={<PaymentComponent cart={cart} user={user} clearCart={clearCart} />} /> */}
         <Route path="/checkout/:nazivProizvoda/:cenaProizvoda/:userId" element={<PaymentComponent />} />
         {user ? (
           <>
@@ -109,23 +122,5 @@ function App() {
     </Router>
   );
 }
-
-//const CheckoutForm = ({ cart, user, clearCart }) => {
-  //const handleSubmit = async (event) => {
-    //event.preventDefault();
-    // Implementacija logike za kreiranje Checkout sesije i procesiranje plaćanja
-    // Poziv backend API-ja za kreiranje Checkout sesije
-    // Redirekcija korisnika na Checkout stranicu Stripe-a
-    // Nakon uspešne transakcije, osvežavanje korpe i redirekcija korisnika
-    // Implementacija ove logike zavisi od vašeg backend-a i konfiguracije Stripe-a
- // };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       {/* Dodajte polja za unos podataka o kartici i ostale informacije */}
-//       <button type="submit">Plati</button>
-//     </form>
-//   );
-// };
 
 export default App;

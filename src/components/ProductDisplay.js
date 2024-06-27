@@ -8,6 +8,7 @@ import './ProductDisplay.css';
 const ProductDisplay = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [sortBy, setSortBy] = useState({ field: 'price', order: 'asc' }); // State to track sorting field and order
   const productsPerPage = 12;
   const { category } = useParams();
 
@@ -15,12 +16,15 @@ const ProductDisplay = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('https://localhost:7073/api/proizvod');
-        console.log(response.data); // Loguj sve proizvode da vidiš šta se vraća
+        console.log(response.data); // Log all products to see what is returned
         const filteredProducts = response.data.filter(product => {
-            const productCategory = product.tipProizvoda.toLowerCase().replace(/\s+/g, '-');
-            return productCategory.includes(category.toLowerCase());
-          });
-        setProducts(filteredProducts);
+          const productCategory = product.tipProizvoda.toLowerCase().replace(/\s+/g, '-');
+          return productCategory.includes(category.toLowerCase());
+        });
+        // Sort filtered products based on current sorting criteria
+        const sortedProducts = sortProducts(filteredProducts, sortBy);
+
+        setProducts(sortedProducts);
         
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -28,10 +32,34 @@ const ProductDisplay = () => {
     };
 
     fetchProducts();
-  }, [category]);
+  }, [category, sortBy]);
+
+  const sortProducts = (products, sort) => {
+    const { field, order } = sort;
+    if (field === 'price') {
+      return order === 'asc'
+        ? products.sort((a, b) => a.cenaProizvoda - b.cenaProizvoda)
+        : products.sort((a, b) => b.cenaProizvoda - a.cenaProizvoda);
+    } else if (field === 'name') {
+      return order === 'asc'
+        ? products.sort((a, b) => a.nazivProizvoda.localeCompare(b.nazivProizvoda))
+        : products.sort((a, b) => b.nazivProizvoda.localeCompare(a.nazivProizvoda));
+    }
+    return products;
+  };
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected);
+  };
+
+  const handleSortChange = (field) => {
+    // Toggle sorting order or change sorting field
+    if (sortBy.field === field) {
+      const newSortOrder = sortBy.order === 'asc' ? 'desc' : 'asc';
+      setSortBy({ field, order: newSortOrder });
+    } else {
+      setSortBy({ field, order: 'asc' });
+    }
   };
 
   const displayProducts = products.slice(
@@ -41,10 +69,18 @@ const ProductDisplay = () => {
 
   return (
     <div className="product-display">
+      <div className="sort-section">
+        <button onClick={() => handleSortChange('price')} className={`sort-button ${sortBy.field === 'price' ? 'active' : ''}`}>
+          Sort by Price {sortBy.field === 'price' && (sortBy.order === 'asc' ? '▲' : '▼')}
+        </button>
+        <button onClick={() => handleSortChange('name')} className={`sort-button ${sortBy.field === 'name' ? 'active' : ''}`}>
+          Sort by Name {sortBy.field === 'name' && (sortBy.order === 'asc' ? '▲' : '▼')}
+        </button>
+      </div>
       <div className="product-grid">
-      {displayProducts.map((product, index) => (
-        <ProductCard key={product.nazivProizvoda} product={product} />
-      ))}
+        {displayProducts.map((product, index) => (
+          <ProductCard key={product.nazivProizvoda} product={product} />
+        ))}
       </div>
       <ReactPaginate
         previousLabel={'Previous'}

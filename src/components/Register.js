@@ -27,35 +27,45 @@ const Register = () => {
     return (
         <div className="container mt-5">
             <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label className="form-label">Username</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
+            <form onSubmit={handleSubmit} className="border p-4">
+                <div className="mb-3 row">
+                    <label className="col-sm-2 col-form-label">Username</label>
+                    <div className="col-sm-10">
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </div>
                 </div>
-                <div className="mb-3">
-                    <label className="form-label">Password</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                <div className="mb-3 row">
+                    <label className="col-sm-2 col-form-label">Password</label>
+                    <div className="col-sm-10">
+                        <input
+                            type="password"
+                            className="form-control"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
                 </div>
-                <div className="mb-3">
-                    <label className="form-label">Email</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                <div className="mb-3 row">
+                    <label className="col-sm-2 col-form-label">Email</label>
+                    <div className="col-sm-10">
+                        <input
+                            type="email"
+                            className="form-control"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
                 </div>
-                <button type="submit" className="btn btn-primary">Register</button>
+                <div className="row">
+                    <div className="col-sm-10 offset-sm-2">
+                        <button type="submit" className="btn btn-primary">Register</button>
+                    </div>
+                </div>
             </form>
         </div>
     );
